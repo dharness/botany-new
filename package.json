@@ -13,6 +13,7 @@
     "lodash": "*",
     "machina": "2.0.0",
     "nodemon": "1.9.2",
+    "schema-inspector": "^1.6.4",
     "stately.js": "1.3.0",
     "superagent": "2.0.0"
   },
