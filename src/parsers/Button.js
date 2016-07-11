@@ -47,15 +47,17 @@ class ButtonParser extends Parser {
    * @param  {object} fbMessage - A json representing a facebook text message
    * @return {object}           - A Machina.js state
    */
-  generateState(fbMessage) {
+  generateState(stateInfo) {
+    let fbMessage = stateInfo.message;
+    let stateName = stateInfo.name;
+    let nextState = stateInfo.next;
     var text = fbMessage.text;
-    var stateName = Math.random().toString();
     let state = {};
 
-    state[`state2`] = {
-      fbMessage: fbMessage,
+    state[stateName] = {
       _onEnter: function() {
-        this.emit('say', this.fbMessage);
+        this.emit('say', fbMessage);
+        if (nextState) { this.transition(nextState); }
       },
       onInput: function(input) {
         this.emit('say', { text: input });

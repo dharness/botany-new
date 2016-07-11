@@ -8,7 +8,7 @@ const fbAccessToken = process.env.FB_ACCESS_TOKEN;
 const fs = require('fs');
 const handleMessageEvent = require('./src/services/messagingHandler.js');
 const handlePostback = require('./src/services/postbackHandler.js');
-
+const dispatch = require('./src/services/dispatch.js');
 
 app.use(bodyParser.urlencoded({
   extended: false
@@ -37,18 +37,8 @@ app.post('/webhook', function(req, res) {
       var pageID = pageEntry.id;
       var timeOfEvent = pageEntry.time;
 
-
-      // Iterate over each messaging event
-      pageEntry.messaging.forEach(function(messagingEvent) {
-        if (messagingEvent.message) {
-          handleMessageEvent(messagingEvent)
-        } else if (messagingEvent.postback) {
-          handlePostback(messagingEvent);
-        } else {
-          console.log("Webhook received unknown messagingEvent: ",
-            messagingEvent.message);
-        }
-      });
+      // Each message type is different, dispatch it to the appropriate handler
+      pageEntry.messaging.forEach(messagingEvent => dispatch(messagingEvent));
     });
 
     // Assume all went well.

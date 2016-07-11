@@ -22,17 +22,19 @@ class TextParser extends Parser {
    * @param  {object} fbMessage - A json representing a facebook text message
    * @return {object}           - A Machina.js state
    */
-  generateState(fbMessage) {
+  generateState(stateInfo) {
+    let fbMessage = stateInfo.message;
+    let stateName = stateInfo.name;
+    let nextState = stateInfo.next;
     var text = fbMessage.text;
-    var stateName = Math.random().toString();
     let state = {};
 
-    state[`state1`] = {
+    state[stateName] = {
       _onEnter: function() {
-        this.emit('say', { text: "Hello from state1" });
+        this.emit('say', { text: fbMessage.text });
+        if (nextState) { this.transition(nextState); }
       },
       onInput: function(input) {
-        console.log('on INput');
         this.emit('say', { text: input });
       }
     };
